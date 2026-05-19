@@ -48,7 +48,7 @@ read documentation and forum threads and eventually got it working using this se
 
     | ENV VARIABLE       | Description                                            |
     |--------------------|--------------------------------------------------------|
-    | DEVICE             | Serial port where the OpenThread RCP Radio is attached |
+    | DEVICE             | Serial port where the OpenThread RCP Radio is attached. Set to `/tmp/ttyOTBR` if using network-based RCP |
     | BAUDRATE           | Serial port baudrate (depends on firmware)   |
     | FLOW_CONTROL (1 or 0) | If hardware flow control should be enabled (depends on firmware) |
     | AUTOFLASH_FIRMWARE (1 or 0) | Automatically install/update firmware (Home Assistant SkyConnect/Yellow) |
