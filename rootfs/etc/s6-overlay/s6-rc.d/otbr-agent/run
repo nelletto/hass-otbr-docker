@@ -3,6 +3,8 @@
 # OpenThread BorderRouter start script
 # ==============================================================================
 
+. /etc/s6-overlay/scripts/otbr-agent-common
+
 declare backbone_if
 declare trel_if
 declare device
