@@ -23,13 +23,13 @@ fi
 
 #Enable beta mode to run a newer, experimental version of OpenThread Border Router
 if [[ -z "$BETA" ]]; then
-    echo "Beta mode enabled."
+    echo "Stable mode enabled."
 
     ln -sf "/opt/otbr-stable/sbin/otbr-agent" /usr/sbin/otbr-agent
     ln -sf "/opt/otbr-stable/sbin/otbr-web" /usr/sbin/otbr-web
     ln -sf "/opt/otbr-stable/sbin/ot-ctl" /usr/sbin/ot-ctl
 else
-    echo "Stable mode enabled."
+    echo "Beta mode enabled."
     ln -sf "/opt/otbr-beta/sbin/otbr-agent" /usr/sbin/otbr-agent
     ln -sf "/opt/otbr-beta/sbin/otbr-web" /usr/sbin/otbr-web
     ln -sf "/opt/otbr-beta/sbin/ot-ctl" /usr/sbin/ot-ctl
