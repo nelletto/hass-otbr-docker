@@ -3,8 +3,6 @@
 # OpenThread BorderRouter start script
 # ==============================================================================
 
-. /etc/s6-overlay/scripts/otbr-agent-common
-
 declare backbone_if
 declare trel_if
 declare device
@@ -18,6 +16,11 @@ declare otbr_rest_listen_port
 backbone_if=$BACKBONE_IF
 trel_if=$TREL_IF
 device=$DEVICE
+
+# Check if IPv6 forwarding is enabled
+if [ "$(cat /proc/sys/net/ipv6/conf/all/forwarding)" != "1" ]; then
+    echo "WARNING: IPv6 routing/forwarding is not enabled! Make sure the Home Assistant host has IPv6 forwarding enabled."
+fi
 
 # if ! -z ${network_device}; then
 #     device="/tmp/ttyOTBR"
@@ -106,10 +109,20 @@ else
 fi
 
 if [ "$NAT64" != "0" ] ; then
-    iptables -t mangle -A PREROUTING -i ${thread_if} -j MARK --set-mark 0x1001
-    iptables -t nat -A POSTROUTING -m mark --mark 0x1001 -j MASQUERADE
-    iptables -t filter -A FORWARD -o ${backbone_if} -j ACCEPT
-    iptables -t filter -A FORWARD -i ${backbone_if} -j ACCEPT
+    # Mark Thread traffic in mangle
+    iptables -t mangle -A PREROUTING -i "${thread_if}" -j MARK --set-mark "${otbr_fw_mark}"
+
+    # MASQUERADE marked traffic
+    iptables -t nat -A POSTROUTING -m mark --mark "${otbr_fw_mark}" -j MASQUERADE
+
+    # NAT64 forward chain — jump unconditionally, filter inside
+    iptables -N "${otbr_forward_nat64_chain}"
+    iptables -I FORWARD 1 -j "${otbr_forward_nat64_chain}"
+
+    # Forward marked traffic
+    iptables -A "${otbr_forward_nat64_chain}" -m mark --mark "${otbr_fw_mark}" -o "${backbone_if}" -j ACCEPT
+    # Use conntrack to identify return traffic
+    iptables -A "${otbr_forward_nat64_chain}" -m conntrack --ctstate ESTABLISHED,RELATED -i "${backbone_if}" -o "${thread_if}" -j ACCEPT
 fi
 
 otbr_rest_listen="::"

@@ -21,11 +21,9 @@ if [ ! -z "$NETWORK_DEVICE" ]; then
     echo "INFO: Enabled socat-otbr-tcp."
 fi
 
-#Thread 1.4 vs Thread 1.3 via otbr-beta and stable folder
+#Enable beta mode to run a newer, experimental version of OpenThread Border Router
 if [[ -z "$BETA" ]]; then
     echo "Beta mode enabled."
-    touch /etc/s6-overlay/s6-rc.d/user/contents.d/mdns
-    touch /etc/s6-overlay/s6-rc.d/otbr-agent/dependencies.d/mdns
 
     ln -sf "/opt/otbr-stable/sbin/otbr-agent" /usr/sbin/otbr-agent
     ln -sf "/opt/otbr-stable/sbin/otbr-web" /usr/sbin/otbr-web
