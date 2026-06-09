@@ -1,7 +1,7 @@
 services:
   otbr:
     container_name: otbr
-    image: ghcr.io/ownbee/hass-otbr-docker
+    image: ghcr.io/nelletto/hass-otbr-docker
     restart: unless-stopped
     privileged: true # don't change this !
     network_mode: host # don't change this !
@@ -19,6 +19,7 @@ services:
       OTBR_WEB_PORT: 7586
       # OTBR_WEB_INTERFACE: "0.0.0.0"
       AUTOFLASH_FIRMWARE: 0
+      # BETA: 1
       OTBR_LOG_LEVEL: error
     devices:
       - /dev/ttyUSB1:/dev/ttyUSB1
